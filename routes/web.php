@@ -11,6 +11,15 @@
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
-});
+});*/
+
+Route::get('/', 'PagesController@index');
+Route::get('/contacts', 'ContactsController@index');
+Route::get('/contacts/write', 'ContactsController@write');
+Route::get('/contacts/{contact}', 'ContactsController@show');
+
+Auth::routes();
+
+Route::get('/dashboard', 'HomeController@dashboard');
