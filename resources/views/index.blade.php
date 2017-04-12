@@ -8,7 +8,7 @@
         <p>Your Friends Contacts:</p>
     @else
         <h1>Hello There!</h1>
-        <p>To use this application, you must be a registered.</p>
+        <p>To use this application, you must be a registered and login.</p>
     @endif
 
 @endsection

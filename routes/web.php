@@ -16,9 +16,13 @@
 });*/
 
 Route::get('/', 'PagesController@index');
+
 Route::get('/contacts', 'ContactsController@index');
+Route::post('/contacts', 'ContactsController@store');
+
 Route::get('/contacts/write', 'ContactsController@write');
-Route::get('/contacts/{contact}', 'ContactsController@show');
+
+//Route::get('/contacts/{contact}', 'ContactsController@show');
 
 Auth::routes();
 

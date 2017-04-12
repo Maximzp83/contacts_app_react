@@ -6,16 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contact extends Model
 {
+//    protected $timestamp = 'birthday';
+
     protected $fillable = [
         'name',
         'email',
         'phone',
         'address',
-        'organization/company',
+        'organization',
         'birthday',
+        'is_friend',
     ];
-
-
 
 
     public function user()

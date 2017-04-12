@@ -3,12 +3,13 @@
 @include('partials/head')
 <body>
 <div id="app">
-    <nav class="navbar navbar-inverse navbar-static-top">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
 
                 <!-- Collapsed Hamburger -->
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#app-navbar-collapse">
                     <span class="sr-only">Toggle Navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -24,12 +25,14 @@
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 @if (! Auth::guest())
-                <ul class="nav navbar-nav">
-                    &nbsp;<li><a href="{{ url('/contacts') }}">My Contacts<span class="sr-only">(current)</span></a></li>
+                    <ul class="nav navbar-nav">
+                        &nbsp;
+                        <li><a href="{{ url('/contacts') }}">My Contacts<span class="sr-only">(current)</span></a>
+                        </li>
 
-                </ul>
-                @endif
-                <!-- Right Side Of Navbar -->
+                    </ul>
+            @endif
+            <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
                     @if (Auth::guest())
@@ -37,7 +40,8 @@
                         <li><a href="{{ route('register') }}">Register</a></li>
                     @else
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-expanded="false">
                                 {{ Auth::user()->name }} <span class="caret"></span>
                             </a>
 
@@ -49,7 +53,8 @@
                                         Logout
                                     </a>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    <form id="logout-form" action="{{ route('logout') }}"
+                                          method="POST" style="display: none;">
                                         {{ csrf_field() }}
                                     </form>
                                 </li>
@@ -61,20 +66,16 @@
         </div>
     </nav>{{--Top Navbar end --}}
 
+    <div class="content-wrapper">
+        <div class="container">
+            @include('partials/flash')
 
-    <div class="container">
-        @include('partials/flash')
-
-        @yield('content')
+            @yield('content')
+        </div>
     </div>
-
 </div>
 
-<!-- Scripts -->
+@include('partials/footer')
 
-<script src="{{ asset('js/all.js') }}"></script>
-<script>
-    $('div.alert').not('.alert-important').delay(3000).slideUp(300);
-</script>
 </body>
 </html>
