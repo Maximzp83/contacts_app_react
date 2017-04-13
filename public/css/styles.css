@@ -35,47 +35,21 @@ hr {
     outline: none;
 }
 
-/*------Contacts-----*/
+/*------Contacts Table-----*/
 
-
-.contacts-list {
-    font-size: 18px;
-    list-style: none;
-    display: inline-block;
-    /*margin-left: 25px;*/
-
+#contacts td > .edit-link {
+    color: #0e14ff;
 }
 
-.contacts-list > p {
-    border-bottom: 1px solid #96a4ab;
-    /*position: fixed;*/
-    /*margin-bottom: 25px;*/
-}
-.contacts-list > p+li  {
-    /*margin-top: 35px;*/
+#contacts td > .delete-link {
+    color: #ff6662;
 }
 
-.contacts-list-container ul:first-child {
-    list-style: decimal;
-    padding-left: 15px;
-   }
 
-.contacts-list-container ul:first-child > li {
-    padding-left: 5px;
-}
 
-.names {
 
-}
 
-.contacts-list > li {
-    /*display: inline-block;*/
 
-}
 
-.contacts-list > li > span {
-    /*display: inline-block;*/
-    /*margin-left: 25px;*/
-    /*color: #5c4e67;*/
-    opacity: 0;
-}
+
+

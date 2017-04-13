@@ -22,7 +22,10 @@ Route::post('/contacts', 'ContactsController@store');
 
 Route::get('/contacts/write', 'ContactsController@write');
 
-//Route::get('/contacts/{contact}', 'ContactsController@show');
+Route::get('/contacts/{id}/delete', 'ContactsController@delete');
+Route::get('/contacts/{id}/edit', 'ContactsController@edit');
+
+Route::patch('/contacts/{id}/update', 'ContactsController@update');
 
 Auth::routes();
 

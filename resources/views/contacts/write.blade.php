@@ -9,11 +9,8 @@
 
     <form action="{{ url('/contacts') }}" method="POST">
         @include('contacts/partials/_form', [
-            'articleTitle' => '',
-            'articleBody' => '',
-            'articlePublishedTime' => date('Y-m-d'),
-            'submitButtonText' => 'Save Contact',
             'contact' => new App\Contact,
+            'submitButtonText' => 'Save contact',
               ])
 
     </form>

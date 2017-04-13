@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreContact;
 use Illuminate\Support\Facades\Auth;
+use Validator;
 
 class ContactsController extends Controller
 {
@@ -22,16 +23,23 @@ class ContactsController extends Controller
 
     public function index() {
 
-        $contacts = Auth::user()->contacts()->get()->toArray();
+        $contacts = Auth::user()->contacts()->latest()->get();
 
-        list($contactKeys) = array_divide($contacts[0]); //get keys of first Contact
-         $exceptKeys = array_except($contactKeys, [0,1,10]); //get only needed keys to show
-         list($contactsKeys, $keysValues) = array_divide($exceptKeys); //get keys values
-        $contactsKeys =  $keysValues;
+//        dd($contacts);
+        if ( $contacts->isNotEmpty() ) {
+            $allIndexes = array_keys( $contacts[0]->getOriginal() ); //get keys of first Contact
+            $titles = array_except($allIndexes, [1,10]); //get only needed keys to show
+            $titles[8] = 'age';
+            $titles[] = 'Actions';
+        }
+
+//         list($contactsKeys, $keysValues) = array_divide($exceptKeys); //get keys values
+
+//        $contactsKeys =  $keysValues;
 //        dd($contacts->first());
 //        dd( $keysValues );
-
-        return view('contacts/index', compact('contactsKeys', 'contacts') );
+//        dd($keys);
+        return view('contacts/index', compact('titles', 'contacts') );
     }
 
     /**
@@ -50,9 +58,7 @@ class ContactsController extends Controller
      */
     public function store(StoreContact $request) {
 
-//        dd($request->organization);
-
-//       Auth::user()->contacts()->saveMany( factory(Contact::class, 5)->create() );
+//       Auth::user()->contacts()->saveMany( factory(Contact::class, 10)->create() );
 
         Auth::user()->contacts()->create( $request->all() );
 
@@ -61,9 +67,103 @@ class ContactsController extends Controller
         return redirect('contacts')->with(['flash_message']);
     }
 
-    public function show(Contact $contact) {
 
-        return view('contacts/show', compact('contact'));
+    /**
+     * Delete Contact Controller
+     * @param Contact $contact
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function delete( $id ) {// Contact $contact, StoreContact $request ) {
+//    dd($contact);
+        $validationData = [];
+        $validationData['id'] = $id;
+
+        $validate = Validator::make( $validationData, [
+            'id' => 'required|exists:contacts,id', //in DB exists validation
+        ]);
+
+        if( $validate->fails() ){
+             session()->flash('flash_message_warning', "Contact not exist!");
+             session()->flash('flash_message_important', true);
+             return redirect('contacts')->with(['flash_message_warning']);
+        }
+
+        $contact = Contact::find($id);
+
+        //----- Does this contact belong to this user validation---
+        if ( $contact->user_id == Auth::user()->id ) {
+            $contact->delete();
+            session()->flash('flash_message', 'Contact removed!');
+        } else {
+            session()->flash('flash_message_warning', "You Can't remove not Your's Contact!");
+            session()->flash('flash_message_important', true);
+            return redirect('contacts')->with(['flash_message_warning']);
+        }
+
+        return redirect('contacts')->with(['flash_message']);
     }
+
+    public function edit( $id ) {
+
+        $validationData = [];
+        $validationData['id'] = $id;
+
+        $validate = Validator::make( $validationData, [
+            'id' => 'required|exists:contacts,id', //in DB exists validation
+        ]);
+
+        if( $validate->fails() ){
+            session()->flash('flash_message_warning', "Contact not exist!");
+            session()->flash('flash_message_important', true);
+            return redirect('contacts')->with(['flash_message_warning']);
+        }
+
+        $contact = Contact::find($id);
+
+        //----- Does this contact belong to this user validation---
+        if ( $contact->user_id == Auth::user()->id ) {
+            return view('contacts/edit', compact('contact') );
+        } else {
+            session()->flash('flash_message_warning', "You Can't edit not Your's Contact!");
+            session()->flash('flash_message_important', true);
+            return redirect('contacts')->with(['flash_message_warning']);
+        }
+
+    }
+
+    public function update( StoreContact $request, $id ) {
+
+        $validationData = [];
+        $validationData['id'] = $id;
+
+        $validate = Validator::make( $validationData, [
+            'id' => 'required|exists:contacts,id', //in DB exists validation
+        ]);
+
+        if( $validate->fails() ){
+            session()->flash('flash_message_warning', "Contact not exist!");
+            session()->flash('flash_message_important', true);
+            return redirect('contacts')->with(['flash_message_warning']);
+        }
+
+        $contact = Contact::find($id);
+
+        $input = $request->all();
+        $input['is_friend'] = isset($input['is_friend']) ? 1 : 0;
+
+        //----- Does this contact belong to this user validation---
+        if ( $contact->user_id == Auth::user()->id ) {
+            $contact->update( $input );
+            session()->flash('flash_message', 'Changes saved!');
+        } else {
+            session()->flash('flash_message_warning', "You Can't edit not Your's Contact!");
+            session()->flash('flash_message_important', true);
+            return redirect('contacts')->with(['flash_message_warning']);
+        }
+
+        return redirect('contacts')->with(['flash_message']);
+
+    }
+
 
 }
