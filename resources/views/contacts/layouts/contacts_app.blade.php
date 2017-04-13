@@ -30,9 +30,6 @@
                         <li><a href="{{ url('/contacts') }}">My Contacts<span class="sr-only">(current)</span></a>
                         </li>
                         &nbsp;
-                        <li><a href="{{ url('/contacts/search') }}">Search Contacts<span
-                                        class="sr-only">(current)</span></a></li>
-                        &nbsp;
                         <li><a href="{{ url('/contacts/write') }}">Write Contact<span
                                         class="sr-only">(current)</span></a></li>
 

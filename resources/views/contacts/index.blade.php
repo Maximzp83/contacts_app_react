@@ -7,7 +7,7 @@
     @if( $contacts->isNotEmpty() )
         <h1>My Contacts:</h1>
         <hr/>
-    
+
         <div class="contacts-list-container">
 
             <table id="contacts" class="display table table-striped table-bordered table-responsive " cellspacing="0" width="100%">
