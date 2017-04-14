@@ -3,7 +3,7 @@
 @section('content')
 
     @if ( Auth::user() )
-        <h1>Welcome {{ Auth::user()->name }}!</h1>
+        <h1>Welcome <b>{{ Auth::user()->name }}</b>!</h1>
         <hr/>
 
         @if( $contacts->isNotEmpty() )
@@ -62,8 +62,10 @@
         @endif
 
     @else
-        <h1>Hello There!</h1>
-        <p>To use this application, you must be a registered and login.</p>
+        <h1>Hello <b>Guest!</b></h1>
+        <h4>Welcome to Contacts Application.</h4>
+        <p>With the help of this application you can record contacts of your friends and employees, as well as customers. You can add a contact, change it, or delete it. The application allows you to search for the necessary contacts and sort them.
+            All you need to work is just to <i>register</i> or <i>login</i>. Good luck!</p>
     @endif
 
 @endsection

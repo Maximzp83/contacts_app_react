@@ -33,7 +33,7 @@
                         <td>{{ $contact->id }}</td>
                         <td><a href="/contacts/{!! $contact->id !!}/edit"
                                class="edit-link">{{ $contact->name }}</a></td>
-                        <td><a href="mailto:{{ $contact->email }}">{{ $contact->email }}</a></td>
+                        <td>{{ $contact->email }}</td>
                         <td>{{ $contact->phone }}</td>
                         <td>{{ $contact->address }}</td>
                         <td>{{ $contact->organization }}</td>
