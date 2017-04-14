@@ -30,7 +30,9 @@ class Contact extends Model
 
     public function setBirthdayAttribute($date) // Мутатор
     {
-        $this->attributes['birthday'] = Carbon::parse($date);
+        if ($date) {
+            $this->attributes['birthday'] = Carbon::parse($date);
+        }
     }
 
     /**
@@ -49,8 +51,6 @@ class Contact extends Model
 
     /**
      *  Returned Age from Birthday
-     *
-     *
      */
     public function getAgeAttribute($date) // Мутатор
     {

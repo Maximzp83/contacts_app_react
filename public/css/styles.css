@@ -42,9 +42,12 @@ hr {
 }
 
 #contacts td > .delete-link {
-    color: #ff6662;
+    color: #ff908b;
 }
 
+#contacts .actions-column {
+    text-align: center;
+}
 
 
 
