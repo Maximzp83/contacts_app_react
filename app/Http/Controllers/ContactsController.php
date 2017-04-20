@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Contact;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use App\Http\Requests\StoreContact;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -14,6 +13,7 @@ class ContactsController extends Controller
 
     /**
      * middleware assign
+     * This Controller Methods Available only for Auth Users
      * ContactsController constructor.
      */
     public function __construct()
@@ -23,10 +23,9 @@ class ContactsController extends Controller
 
     public function index()
     {
-
         $contacts = Auth::user()->contacts()->latest()->get();
 
-//        dd($contacts);
+//        ----Prepare array with Indexes for Contacts table --------
         if ($contacts->isNotEmpty()) {
             $allIndexes = array_keys($contacts[0]->getOriginal()); //get keys of first Contact
 //            $titles = array_except($allIndexes, [1,10]); //get only needed keys to show
@@ -47,26 +46,26 @@ class ContactsController extends Controller
     }
 
     /**
-     * Create a new Contact page
+     * new Contact creating page
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function write()
     {
-
         return view('contacts/write');
     }
 
     /**
-     * Export Contact to DB controller,
+     * Export Contact to DB Controller,
      * StoreContact - Request Rules
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(StoreContact $request)
     {
-
 //       Auth::user()->contacts()->saveMany( factory(Contact::class, 10)->create() );
+
+//        ----Birth Date Validation---
         $birthDate = $request->birthday;
-        if ($birthDate != null && Carbon::parse($birthDate)->diffInDays(Carbon::now(), false) < 1) {     //Birth Date Validation
+        if ($birthDate != null && Carbon::parse($birthDate)->diffInDays(Carbon::now(), false) < 1) {
             session()->flash('flash_message_warning', "Wrong Birth Date!");
             session()->flash('flash_message_important', true);
             return redirect('contacts/write')->with(['flash_message_warning']);
@@ -79,7 +78,6 @@ class ContactsController extends Controller
         return redirect('contacts')->with(['flash_message']);
     }
 
-
     /**
      * Delete Contact Controller
      * @param Contact $contact
@@ -88,11 +86,13 @@ class ContactsController extends Controller
     public function delete($id)
     {// Contact $contact, StoreContact $request ) {
 //    dd($contact);
+
+        //-----contact exists in DB validation-----
         $validationData = [];
         $validationData['id'] = $id;
 
         $validate = Validator::make($validationData, [
-            'id' => 'required|exists:contacts,id', //in DB exists validation
+            'id' => 'required|exists:contacts,id',
         ]);
 
         if ($validate->fails()) {
@@ -116,14 +116,20 @@ class ContactsController extends Controller
         return redirect('contacts')->with(['flash_message']);
     }
 
+    /**
+     * Edit Contact Controller
+     * Prepare Contact to Edit
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function edit($id)
     {
-
+     //----contact exists in DB validation------
         $validationData = [];
         $validationData['id'] = $id;
 
         $validate = Validator::make($validationData, [
-            'id' => 'required|exists:contacts,id', //in DB exists validation
+            'id' => 'required|exists:contacts,id',
         ]);
 
         if ($validate->fails()) {
@@ -142,14 +148,19 @@ class ContactsController extends Controller
             session()->flash('flash_message_important', true);
             return redirect('contacts')->with(['flash_message_warning']);
         }
-
     }
 
+    /**
+     * Prepare Contact after Edit to Save into DataBase
+     * @param StoreContact $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(StoreContact $request, $id)
     {
-
+    //-----Birth Date Validation------
         $birthDate = $request->birthday;
-        if ($birthDate != null && Carbon::parse($birthDate)->diffInDays(Carbon::now(), false) < 1) {     //Birth Date Validation
+        if ($birthDate != null && Carbon::parse($birthDate)->diffInDays(Carbon::now(), false) < 1) {
             session()->flash('flash_message_warning', "Wrong Birth Date!");
             session()->flash('flash_message_important', true);
             return redirect("contacts/{$id}/edit")->with(['flash_message_warning']);
@@ -158,8 +169,9 @@ class ContactsController extends Controller
         $validationData = [];
         $validationData['id'] = $id;
 
+    //-----contact exists in DB validation----
         $validate = Validator::make($validationData, [
-            'id' => 'required|exists:contacts,id', //in DB exists validation
+            'id' => 'required|exists:contacts,id',
         ]);
 
         if ($validate->fails()) {
@@ -184,7 +196,6 @@ class ContactsController extends Controller
         }
 
         return redirect('contacts')->with(['flash_message']);
-
     }
 
 

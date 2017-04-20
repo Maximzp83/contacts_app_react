@@ -40,7 +40,7 @@
                         <td>
                             @if ($contact->is_friend) yes @else - @endif
                         </td>
-                        <td>{{ $contact->getAgeAttribute($contact->birthday) }}</td>
+                        <td class="age">{{ $contact->getAgeAttribute($contact->birthday) }}</td>
                         <td>{{ $contact->created_at }}</td>
                         <td class="actions-column">
                             <a href="/contacts/{!! $contact->id !!}/delete" class="delete-link">

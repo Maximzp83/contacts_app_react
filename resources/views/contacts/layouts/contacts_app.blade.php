@@ -27,11 +27,10 @@
                 @if (! Auth::guest())
                     <ul class="nav navbar-nav">
                         &nbsp;
-                        <li><a href="{{ url('/contacts') }}">My Contacts<span class="sr-only">(current)</span></a>
+                        <li><a href="{{ url('/contacts') }}">My Contacts</a>
                         </li>
                         &nbsp;
-                        <li><a href="{{ url('/contacts/write') }}">Write Contact<span
-                                        class="sr-only">(current)</span></a></li>
+                        <li><a href="{{ url('/contacts/write') }}">Write Contact</a></li>
 
                     </ul>
             @endif

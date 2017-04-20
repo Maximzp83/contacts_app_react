@@ -41,7 +41,7 @@
                             <td>
                                 @if ($contact->is_friend) yes @else - @endif
                             </td>
-                            <td>{{ $contact->getAgeAttribute($contact->birthday) }}</td>
+                            <td class="age">{{ $contact->getAgeAttribute($contact->birthday) }}</td>
                             <td>{{ $contact->created_at }}</td>
                             <td class="actions-column">
                                 <a href="/contacts/{!! $contact->id !!}/delete" class="delete-link">
@@ -57,15 +57,15 @@
 
             </div>
         @else
-            <h1>No Friends yet</h1>
-            <hr/>
+            <h3>No Friends yet</h3>
+
         @endif
 
     @else
         <h1>Hello <b>Guest!</b></h1>
         <h4>Welcome to Contacts Application.</h4>
         <p>With the help of this application you can record contacts of your friends and employees, as well as customers. You can add a contact, change it, or delete it. The application allows you to search for the necessary contacts and sort them.
-            All you need to work is just to <i>register</i> or <i>login</i>. Good luck!</p>
+           <br>All you need to work is just complete <b><a href="{{ route('register') }}">Register</a></b> or <b><a href="{{ route('login') }}">Login</a></b> procedure. Good luck!</p>
     @endif
 
 @endsection
