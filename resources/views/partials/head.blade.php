@@ -17,8 +17,13 @@
 
     <!-- Scripts -->
     <script>
+        window.data = {};
+        window.data.csrf = "{{ csrf_token() }}";
+
+    </script>
+    {{--<script>
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
         ]) !!};
-    </script>
+    </script>--}}
 </head>

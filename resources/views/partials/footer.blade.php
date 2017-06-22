@@ -6,10 +6,7 @@
 
 <script>
     $(document).ready(function() {
-        $('#contacts').DataTable({
-
-//            "order": [[ 3, "desc" ]]
-        });
+        $('#contacts').DataTable();
     } );
 </script>
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Contact;
 use Carbon\Carbon;
 use App\Http\Requests\StoreContact;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 
@@ -23,6 +24,12 @@ class ContactsController extends Controller
 
     public function index()
     {
+
+        $titles = null;
+        $contacts = null;
+        $modContacts = null;
+
+
         $contacts = Auth::user()->contacts()->latest()->get();
 
 //        ----Prepare array with Indexes for Contacts table --------
@@ -40,9 +47,32 @@ class ContactsController extends Controller
                 }
             }
             $titles[] = 'Actions';
+
+            $modContacts = $contacts;
+            $modContacts->map(function ($contact) {
+                $contact['toAge'] = $contact->age;
+                return $contact;
+            });
         }
 
-        return view('contacts/index', compact('titles', 'contacts'));
+
+        if ($modContacts && $titles) {
+            $data['contacts']['titles'] = $titles;
+            $data['contacts']['contacts_list'] = $modContacts;
+
+
+        }   else $data['contacts'] = null;
+
+
+
+//        return view('contacts/index', compact('titles', 'contacts'));
+
+
+
+//        dd('ok');
+
+
+        return response()->json($data);
     }
 
     /**
@@ -60,22 +90,35 @@ class ContactsController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(StoreContact $request)
-    {
+//    public function store(Request $request)
+        {
+            $data = null;
+
+//        dd($req->all());
 //       Auth::user()->contacts()->saveMany( factory(Contact::class, 10)->create() );
 
 //        ----Birth Date Validation---
         $birthDate = $request->birthday;
         if ($birthDate != null && Carbon::parse($birthDate)->diffInDays(Carbon::now(), false) < 1) {
-            session()->flash('flash_message_warning', "Wrong Birth Date!");
-            session()->flash('flash_message_important', true);
-            return redirect('contacts/write')->with(['flash_message_warning']);
+//            session()->flash('flash_message_warning', "Wrong Birth Date!");
+//            session()->flash('flash_message_important', true);
+//            return redirect('contacts/write')->with(['flash_message_warning']);
+
+            $data['warning']['flash_message_warning'] = "Wrong Birth Date!";
+            $data['warning']['flash_message_important'] = true;
+
+            return response()->json($data);
         }
 
         Auth::user()->contacts()->create($request->all());
 
-        session()->flash('flash_message', 'Contact has been saved!');
+//        session()->flash('flash_message', 'Contact has been saved!');
 
-        return redirect('contacts')->with(['flash_message']);
+        $data['warning']['flash_message'] = "Contact has been saved!";
+
+        return response()->json($data);
+
+//        return redirect('contacts')->with(['flash_message']);
     }
 
     /**
@@ -85,6 +128,7 @@ class ContactsController extends Controller
      */
     public function delete($id)
     {// Contact $contact, StoreContact $request ) {
+        $data = null;
 //    dd($contact);
 
         //-----contact exists in DB validation-----
@@ -96,8 +140,8 @@ class ContactsController extends Controller
         ]);
 
         if ($validate->fails()) {
-            session()->flash('flash_message_warning', "Contact not exist!");
-            session()->flash('flash_message_important', true);
+//            session()->flash('flash_message_warning', "Contact not exist!");
+//            session()->flash('flash_message_important', true);
             return redirect('contacts')->with(['flash_message_warning']);
         }
 
@@ -106,14 +150,27 @@ class ContactsController extends Controller
         //----- Does this contact belong to this user validation---
         if ($contact->user_id == Auth::user()->id) {
             $contact->delete();
-            session()->flash('flash_message', 'Contact removed!');
+//            session()->flash('flash_message', 'Contact removed!');
+
+            $data['warning']['flash_message'] = "Contact removed!";
+            $data['id'] = $id;
         } else {
-            session()->flash('flash_message_warning', "You Can't remove not Your's Contact!");
-            session()->flash('flash_message_important', true);
-            return redirect('contacts')->with(['flash_message_warning']);
+//            session()->flash('flash_message_warning', "You Can't remove not Your's Contact!");
+//            session()->flash('flash_message_important', true);
+
+            $data['warning']['flash_message_warning'] = "You Can't remove not Your's Contact!";
+            $data['warning']['flash_message_important'] = true;
+
+            return response()->json($data);
+
+//            return redirect('contacts')->with(['flash_message_warning']);
         }
 
-        return redirect('contacts')->with(['flash_message']);
+
+        $data['warning']['flash_message'] = "Contact has been saved!";
+
+        return response()->json($data);
+//        return redirect('contacts')->with(['flash_message']);
     }
 
     /**
@@ -124,7 +181,9 @@ class ContactsController extends Controller
      */
     public function edit($id)
     {
-     //----contact exists in DB validation------
+        $data = null;
+
+        //----contact exists in DB validation------
         $validationData = [];
         $validationData['id'] = $id;
 
@@ -133,20 +192,36 @@ class ContactsController extends Controller
         ]);
 
         if ($validate->fails()) {
-            session()->flash('flash_message_warning', "Contact not exist!");
-            session()->flash('flash_message_important', true);
-            return redirect('contacts')->with(['flash_message_warning']);
+//            session()->flash('flash_message_warning', "Contact not exist!");
+//            session()->flash('flash_message_important', true);
+
+            $data['warning']['flash_message_warning'] = "Contact not exist!";
+            $data['warning']['flash_message_important'] = true;
+
+            return response()->json($data);
+
+//            return redirect('contacts')->with(['flash_message_warning']);
         }
 
         $contact = Contact::find($id);
 
         //----- Does this contact belong to this user validation---
         if ($contact->user_id == Auth::user()->id) {
-            return view('contacts/edit', compact('contact'));
+
+            $data = $contact;
+            return response()->json($data);
+
+//            return view('contacts/edit', compact('contact'));
         } else {
-            session()->flash('flash_message_warning', "You Can't edit not Your's Contact!");
-            session()->flash('flash_message_important', true);
-            return redirect('contacts')->with(['flash_message_warning']);
+//            session()->flash('flash_message_warning', "You Can't edit not Your's Contact!");
+//            session()->flash('flash_message_important', true);
+
+            $data['warning']['flash_message_warning'] = "You Can't edit not Your's Contact!";
+            $data['warning']['flash_message_important'] = true;
+
+            return response()->json($data);
+
+//            return redirect('contacts')->with(['flash_message_warning']);
         }
     }
 
@@ -158,12 +233,19 @@ class ContactsController extends Controller
      */
     public function update(StoreContact $request, $id)
     {
+        $data = null;
     //-----Birth Date Validation------
         $birthDate = $request->birthday;
         if ($birthDate != null && Carbon::parse($birthDate)->diffInDays(Carbon::now(), false) < 1) {
-            session()->flash('flash_message_warning', "Wrong Birth Date!");
-            session()->flash('flash_message_important', true);
-            return redirect("contacts/{$id}/edit")->with(['flash_message_warning']);
+//            session()->flash('flash_message_warning', "Wrong Birth Date!");
+//            session()->flash('flash_message_important', true);
+
+            $data['warning']['flash_message_warning'] = "Wrong Birth Date!";
+            $data['warning']['flash_message_important'] = true;
+
+            return response()->json($data);
+
+//            return redirect("contacts/{$id}/edit")->with(['flash_message_warning']);
         }
 
         $validationData = [];
@@ -175,27 +257,43 @@ class ContactsController extends Controller
         ]);
 
         if ($validate->fails()) {
-            session()->flash('flash_message_warning', "Contact not exist!");
-            session()->flash('flash_message_important', true);
-            return redirect('contacts')->with(['flash_message_warning']);
+//            session()->flash('flash_message_warning', "Contact not exist!");
+//            session()->flash('flash_message_important', true);
+
+            $data['warning']['flash_message_warning'] = "Contact not exist!";
+            $data['warning']['flash_message_important'] = true;
+
+            return response()->json($data);
+
+//            return redirect('contacts')->with(['flash_message_warning']);
         }
 
         $contact = Contact::find($id);
 
         $input = $request->all();
-        $input['is_friend'] = isset($input['is_friend']) ? 1 : 0;
+//        $input['is_friend'] = isset($input['is_friend']) ? 1 : 0;
 
         //----- Does this contact belong to this user validation---
         if ($contact->user_id == Auth::user()->id) {
             $contact->update($input);
-            session()->flash('flash_message', 'Changes saved!');
+
+//            session()->flash('flash_message', 'Changes saved!');
+            $data['warning']['flash_message'] = "Changes saved!";
+
         } else {
-            session()->flash('flash_message_warning', "You Can't edit not Your's Contact!");
-            session()->flash('flash_message_important', true);
-            return redirect('contacts')->with(['flash_message_warning']);
+//            session()->flash('flash_message_warning', "You Can't edit not Your's Contact!");
+//            session()->flash('flash_message_important', true);
+
+            $data['warning']['flash_message_warning'] = "You Can't edit not Your's Contact!";
+            $data['warning']['flash_message_important'] = true;
+
+            return response()->json($data);
+
+//            return redirect('contacts')->with(['flash_message_warning']);
         }
 
-        return redirect('contacts')->with(['flash_message']);
+        return response()->json($data);
+//        return redirect('contacts')->with(['flash_message']);
     }
 
 

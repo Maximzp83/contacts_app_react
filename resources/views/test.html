@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Styles -->
+    <link href="../../public/css/all.css" rel="stylesheet">
+    <link href="../../public/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="../../public/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../../public/css/styles.css" rel="stylesheet">
+
+
+    <!-- Scripts -->
+    <script>
+        window.data = {};
+        window.data.csrf = "{{ csrf_token() }}";
+
+    </script>
+
+</head>
+<body>
+<span>
+<div>
+<table id="example" class="display" cellspacing="0" width="100%">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Position</th>
+        <th>Office</th>
+        <th>Age</th>
+        <th>Start date</th>
+        <th>Salary</th>
+    </tr>
+    </thead>
+    <tfoot>
+    <tr>
+        <th>Name</th>
+        <th>Position</th>
+        <th>Office</th>
+        <th>Age</th>
+        <th>Start date</th>
+        <th>Salary</th>
+    </tr>
+    </tfoot>
+    <tbody>
+    <tr>
+        <td>Tiger Nixon</td>
+        <td>System Architect</td>
+        <td>Edinburgh</td>
+        <td>61</td>
+        <td>2011/04/25</td>
+        <td>$320,800</td>
+    </tr>
+    <tr>
+        <td>Michael Bruce</td>
+        <td>Javascript Developer</td>
+        <td>Singapore</td>
+        <td>29</td>
+        <td>2011/06/27</td>
+        <td>$183,000</td>
+    </tr>
+    <tr>
+        <td>Donna Snider</td>
+        <td>Customer Support</td>
+        <td>New York</td>
+        <td>27</td>
+        <td>2011/01/25</td>
+        <td>$112,000</td>
+    </tr>
+    </tbody>
+</table>
+</div>
+</span>
+
+
+
+
+
+
+<script src="../../public/js/all.js"></script>
+<script src="../../public/js/jquery-1.12.4.js"></script>
+<script src="../../public/js/jquery.dataTables.min.js"></script>
+<script src="../../public/js/dataTables.bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable();
+    } );
+</script>
+
+<script>
+    $('div.alert').not('.alert-important').delay(2000).slideUp(400);
+</script>
+
+</body>
+</html>

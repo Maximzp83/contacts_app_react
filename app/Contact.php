@@ -28,12 +28,33 @@ class Contact extends Model
     }
 
 
-    public function setBirthdayAttribute($date) // Мутатор
+   /* public function setBirthdayAttribute($date) // Мутатор
     {
         if ($date) {
             $this->attributes['birthday'] = Carbon::parse($date);
         }
+    }*/
+
+    public function setAgeAttribute($date)
+    {
+        if ($date != null) {
+        $this->attributes['birthday'] = Carbon::parse($date);
+        }
     }
+
+
+    /**
+     * Accessor for Age.
+     */
+    public function getAgeAttribute()
+    {
+//
+            return Carbon::parse($this->attributes['birthday'])->age;
+//        }
+    }
+
+
+
 
     /**
      *  Returned Birthday Date
@@ -52,13 +73,13 @@ class Contact extends Model
     /**
      *  Returned Age from Birthday
      */
-    public function getAgeAttribute($date) // Мутатор
+    /*public static function getAgeAttribute($date) // Мутатор
     {
         if ($date != null) {
             return Carbon::parse($date)->diffInYears(Carbon::now());
         }
        return null;
-    }
+    }*/
 
     public function user()
     {
